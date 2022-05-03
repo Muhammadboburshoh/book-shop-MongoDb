@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { validationResult } = require('express-validator');
 
 const Product = require('../models/product');
@@ -66,7 +67,7 @@ exports.postAddProduct = (req, res, next) => {
       //     price: price,
       //     description: description
       //   },
-      //   errorMessage: 'Database opration failed, plase try agian.',
+      //   errorMessage: 'Database operation failed, please try again.',
       //   validationErrors: []
       // });
       // res.redirect('/500');
