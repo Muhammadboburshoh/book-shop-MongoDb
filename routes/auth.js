@@ -1,71 +1,77 @@
-const express = require("express");
-const { check, body } = require("express-validator");
+const express = require('express');
+const { check, body } = require('express-validator');
 
-const authController = require("../controllers/auth");
-const User = require("../models/user");
+const authController = require('../controllers/auth');
+const User = require('../models/user');
 
 const router = express.Router();
 
-router.get("/login", authController.getLogin);
+router.get('/login', authController.getLogin);
 
-router.get("/signup", authController.getSignup);
+router.get('/signup', authController.getSignup);
 
 router.post(
-  "/login",
+  '/login',
   [
     body('email')
       .isEmail()
-      .withMessage('Plase enter a valid email address'),
-    body('password', 'Password has to be valid')
-      .isLength({min: 5})
+      .withMessage('Please enter a valid email address.')
+      .normalizeEmail(),
+    body('password', 'Password has to be valid.')
+      .isLength({ min: 5 })
       .isAlphanumeric()
+      .trim()
   ],
   authController.postLogin
 );
 
 router.post(
-  "/signup",
+  '/signup',
   [
-    check("email")
+    check('email')
       .isEmail()
-      .withMessage("Plase enter a value email.")
+      .withMessage('Please enter a valid email.')
       .custom((value, { req }) => {
-        // if(value === 'test@test.com') {
-        //   throw new Error('This email addres if forbidden.');
+        // if (value === 'test@test.com') {
+        //   throw new Error('This email address if forbidden.');
         // }
         // return true;
-        return User.findOne({ email: value }).then((userDoc) => {
+        return User.findOne({ email: value }).then(userDoc => {
           if (userDoc) {
             return Promise.reject(
-              "E-Mail exists already, please pick a different one."
+              'E-Mail exists already, please pick a different one.'
             );
           }
         });
-      }),
+      })
+      .normalizeEmail(),
     body(
-      "password",
-      "Plase enter a password with only number and text and al last 5 characters."
+      'password',
+      'Please enter a password with only numbers and text and at least 5 characters.'
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
-    body("confirmPassword").custom((value, { req }) => {
+      .isAlphanumeric()
+      .trim(),
+    body('confirmPassword')
+    .trim()
+    .custom((value, { req }) => {
       if (value !== req.body.password) {
-        throw new Error("Paswords have to match!");
+        throw new Error('Passwords have to match!');
       }
       return true;
-    }),
+    })
   ],
   authController.postSignup
 );
 
-router.post("/logout", authController.postLogout);
+router.post('/logout', authController.postLogout);
 
-router.get("/reset", authController.getReset);
+router.get('/reset', authController.getReset);
 
-router.post("/reset", authController.postReset);
+router.post('/reset', authController.postReset);
 
-router.get("/reset/:token", authController.getNewPassword);
+router.get('/reset/:token', authController.getNewPassword);
 
-router.post("/new-password", authController.postNewPassword);
+router.post('/new-password', authController.postNewPassword);
 
 module.exports = router;
