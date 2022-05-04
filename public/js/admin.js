@@ -1,4 +1,4 @@
-const deleteProduct = (btn) => {
+const deleteProduct = btn => {
   const prodId = btn.parentNode.querySelector('[name=productId]').value;
   const csrf = btn.parentNode.querySelector('[name=_csrf]').value;
 
@@ -17,5 +17,7 @@ const deleteProduct = (btn) => {
       console.log(data);
       productElement.parentNode.removeChild(productElement);
     })
-    .catch(err => console.log(err))
-}
+    .catch(err => {
+      console.log(err);
+    });
+};
