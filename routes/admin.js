@@ -1,5 +1,3 @@
-const path = require('path');
-
 const express = require('express');
 const { body } = require('express-validator');
 
@@ -31,8 +29,10 @@ router.post(
   adminController.postAddProduct
 );
 
+// /admin/edit-product/:ID => GET
 router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
 
+// /admin/edit-product => POST
 router.post(
   '/edit-product',
   [
@@ -49,6 +49,7 @@ router.post(
   adminController.postEditProduct
 );
 
+// /admin/product/:ID => DELETE
 router.delete('/product/:productId', isAuth, adminController.deleteProduct);
 
 module.exports = router;

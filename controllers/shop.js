@@ -93,7 +93,6 @@ exports.getIndex = (req, res, next) => {
 exports.getCart = (req, res, next) => {
   req.user
     .populate('cart.items.productId')
-    // .execPopulate()
     .then(user => {
       const products = user.cart.items;
       res.render('shop/cart', {
@@ -145,7 +144,6 @@ exports.getCheckout = (req, res, next) => {
   let total = 0;
   req.user
     .populate('cart.items.productId')
-    // .execPopulate()
     .then(user => {
       products = user.cart.items;
       total = 0;
@@ -187,7 +185,6 @@ exports.getCheckout = (req, res, next) => {
 exports.getCheckoutSuccess = (req, res, next) => {
   req.user
     .populate('cart.items.productId')
-    // .execPopulate()
     .then(user => {
       const products = user.cart.items.map(i => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
@@ -217,7 +214,6 @@ exports.getCheckoutSuccess = (req, res, next) => {
 exports.postOrder = (req, res, next) => {
   req.user
     .populate('cart.items.productId')
-    // .execPopulate()
     .then(user => {
       const products = user.cart.items.map(i => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
@@ -285,7 +281,7 @@ exports.getInvoice = (req, res, next) => {
       pdfDoc.fontSize(26).text('Invoice', {
         underline: true
       });
-      pdfDoc.text('-----------------------');
+      pdfDoc.text('__________________________');
       let totalPrice = 0;
       order.products.forEach(prod => {
         totalPrice += prod.quantity * prod.product.price;
@@ -300,10 +296,12 @@ exports.getInvoice = (req, res, next) => {
               prod.product.price
           );
       });
-      pdfDoc.text('---');
+      pdfDoc.text('__________________');
       pdfDoc.fontSize(20).text('Total Price: $' + totalPrice);
 
       pdfDoc.end();
+
+      //bu noqulayroq usulda
       // fs.readFile(invoicePath, (err, data) => {
       //   if (err) {
       //     return next(err);
@@ -316,7 +314,6 @@ exports.getInvoice = (req, res, next) => {
       //   res.send(data);
       // });
       // const file = fs.createReadStream(invoicePath);
-
       // file.pipe(res);
     })
     .catch(err => next(err));
